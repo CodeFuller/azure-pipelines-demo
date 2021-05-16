@@ -7,10 +7,18 @@ pool:
 
 stages:
 - stage: BuildStage
-  displayName: Build Project
+  displayName: Build
   jobs:
   - job: BuildJob
-    displayName: Build Project
+    displayName: Build
+    steps:
+    - powershell: 'Copy-Item "version.txt" -Destination "app-version.txt"'
+
+- stage: DeployStage
+  displayName: Deploy
+  jobs:
+  - job: DeployJob
+    displayName: Deploy
     steps:
     - task: S3Upload@1
       displayName: 'Deploy to S3'
@@ -18,5 +26,5 @@ stages:
         awsCredentials: '$(AwsCredentials)'
         bucketName: '$(TargetBucketName)'
         sourceFolder: .
-        globExpressions: version.txt
+        globExpressions: app-version.txt
         filesAcl: public-read
