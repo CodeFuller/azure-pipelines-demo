@@ -12,7 +12,15 @@ stages:
   - job: BuildJob
     displayName: Build Job
     steps:
+      # We emulate project build with file copying.
     - powershell: 'Copy-Item "version.txt" -Destination "app-version.txt"'
+      displayName: 'Build Project'
+
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish Pipeline Artifact'
+      inputs:
+        targetPath: 'app-version.txt'
+        artifact: 'project-binaries'
 
 - stage: DeployStage
   displayName: Deploy Stage
@@ -20,6 +28,11 @@ stages:
   - job: DeployJob
     displayName: Deploy Job
     steps:
+    - task: DownloadPipelineArtifact@2
+      displayName: 'Download Pipeline Artifact'
+      inputs:
+        artifactName: 'project-binaries'
+
     - task: S3Upload@1
       displayName: 'Deploy to S3'
       inputs:
