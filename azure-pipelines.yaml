@@ -19,3 +19,4 @@ stages:
         bucketName: '$(TargetBucketName)'
         sourceFolder: .
         globExpressions: version.txt
+        filesAcl: public-read
