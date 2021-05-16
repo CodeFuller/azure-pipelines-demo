@@ -28,7 +28,7 @@ stages:
   - job: DeployJob
     displayName: Deploy Job
     steps:
-    - download:
+    - download: current
       displayName: Download Pipeline Artifact
       artifact: project-binaries
 
