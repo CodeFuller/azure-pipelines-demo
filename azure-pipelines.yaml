@@ -17,10 +17,10 @@ stages:
       displayName: 'Build Project'
 
     - task: PublishPipelineArtifact@1
-      displayName: 'Publish Pipeline Artifact'
+      displayName: Publish Pipeline Artifact
       inputs:
-        targetPath: 'app-version.txt'
-        artifact: 'project-binaries'
+        targetPath: app-version.txt
+        artifact: project-binaries
 
 - stage: DeployStage
   displayName: Deploy Stage
@@ -42,7 +42,7 @@ stages:
       displayName: Check Deploy Artifacts
 
     - task: S3Upload@1
-      displayName: 'Deploy to S3'
+      displayName: Deploy to S3
       inputs:
         awsCredentials: '$(AwsCredentials)'
         bucketName: '$(TargetBucketName)'
