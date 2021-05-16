@@ -25,27 +25,33 @@ stages:
 - stage: DeployStage
   displayName: Deploy Stage
   jobs:
-  - job: DeployJob
+  - deployment: DeployJob
     displayName: Deploy Job
-    steps:
-    - download: current
-      displayName: Download Pipeline Artifact
-      artifact: project-binaries
+    environment: test
+    strategy:
+      runOnce:
+        preDeploy:
+          steps:
+          - download: current
+            displayName: Download Pipeline Artifact
+            artifact: project-binaries
 
-    # We check for artifacts existence because S3 Upload task will not produce error in case of missing source files.
-    - powershell: |
-       $FilePath = "$(Pipeline.Workspace)/project-binaries/app-version.txt"
-       if (-not (Test-Path $FilePath -PathType Leaf)) {
-           Write-Error "File $FilePath does not exist"
-           exit 1
-       }
-      displayName: Check Deploy Artifacts
+          # We check for artifacts existence because S3 Upload task will not produce error in case of missing source files.
+          - powershell: |
+             $FilePath = "$(Pipeline.Workspace)/project-binaries/app-version.txt"
+             if (-not (Test-Path $FilePath -PathType Leaf)) {
+                 Write-Error "File $FilePath does not exist"
+                 exit 1
+             }
+            displayName: Check Deploy Artifacts
 
-    - task: S3Upload@1
-      displayName: Deploy to S3
-      inputs:
-        awsCredentials: '$(AwsCredentials)'
-        bucketName: '$(TargetBucketName)'
-        sourceFolder: $(Pipeline.Workspace)/project-binaries
-        globExpressions: app-version.txt
-        filesAcl: public-read
+        deploy:
+          steps:
+            - task: S3Upload@1
+              displayName: Deploy to S3
+              inputs:
+                awsCredentials: '$(AwsCredentials)'
+                bucketName: '$(TargetBucketName)'
+                sourceFolder: $(Pipeline.Workspace)/project-binaries
+                globExpressions: app-version.txt
+                filesAcl: public-read
