@@ -28,10 +28,9 @@ stages:
   - job: DeployJob
     displayName: Deploy Job
     steps:
-    - task: DownloadPipelineArtifact@2
-      displayName: 'Download Pipeline Artifact'
-      inputs:
-        artifactName: 'project-binaries'
+    - download:
+      displayName: Download Pipeline Artifact
+      artifact: project-binaries
 
     # We check for artifacts existence because S3 Upload task will not produce error in case of missing source files.
     - powershell: |
