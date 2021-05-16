@@ -22,65 +22,12 @@ stages:
         targetPath: app-version.txt
         artifact: project-binaries
 
-- stage: DeployToTest
-  displayName: Deploy to Test
-  jobs:
-  - deployment: DeployJob
-    displayName: Deploy to Test
-    environment: test
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-            # There is no download artifacts task here because it is auto injected in the deploy hook - https://docs.microsoft.com/en-us/azure/devops/pipelines/process/deployment-jobs?view=azure-devops#descriptions-of-lifecycle-hooks
-            # Just in case we check for artifacts existence.
-            # S3 Upload task will not produce error in case of missing source files.
-            - powershell: |
-               $FilePath = "$(Pipeline.Workspace)/project-binaries/app-version.txt"
-               if (-not (Test-Path $FilePath -PathType Leaf)) {
-                   Write-Error "File $FilePath does not exist"
-                   exit 1
-               }
-              displayName: Check Deploy Artifacts
+- template: deploy-stage-template.yaml
+  parameters:
+    envName: test
+    envDisplayName: Test
 
-            - task: S3Upload@1
-              displayName: Deploy to S3
-              inputs:
-                awsCredentials: '$(AwsCredentials)'
-                bucketName: '$(TargetBucketName)'
-                sourceFolder: $(Pipeline.Workspace)/project-binaries
-                targetFolder: test
-                globExpressions: app-version.txt
-                filesAcl: public-read
-
-# TODO: Avoid duplication with DeployToTest
-- stage: DeployToProd
-  displayName: Deploy to Prod
-  jobs:
-  - deployment: DeployJob
-    displayName: Deploy to Prod
-    environment: prod
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-            # There is no download artifacts task here because it is auto injected in the deploy hook - https://docs.microsoft.com/en-us/azure/devops/pipelines/process/deployment-jobs?view=azure-devops#descriptions-of-lifecycle-hooks
-            # Just in case we check for artifacts existence.
-            # S3 Upload task will not produce error in case of missing source files.
-            - powershell: |
-               $FilePath = "$(Pipeline.Workspace)/project-binaries/app-version.txt"
-               if (-not (Test-Path $FilePath -PathType Leaf)) {
-                   Write-Error "File $FilePath does not exist"
-                   exit 1
-               }
-              displayName: Check Deploy Artifacts
-
-            - task: S3Upload@1
-              displayName: Deploy to S3
-              inputs:
-                awsCredentials: '$(AwsCredentials)'
-                bucketName: '$(TargetBucketName)'
-                sourceFolder: $(Pipeline.Workspace)/project-binaries
-                targetFolder: prod
-                globExpressions: app-version.txt
-                filesAcl: public-read
+- template: deploy-stage-template.yaml
+  parameters:
+    envName: prod
+    envDisplayName: Production
