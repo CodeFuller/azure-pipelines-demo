@@ -33,6 +33,15 @@ stages:
       inputs:
         artifactName: 'project-binaries'
 
+    # We check for artifacts existence because S3 Upload task will not produce error in case of missing source files.
+    - powershell: |
+       $FilePath = "./app-version.txt"
+       if (-not (Test-Path $FilePath -PathType Leaf)) {
+           Write-Error "File $FilePath does not exist"
+           exit 1
+       }
+      displayName: Check Deploy Artifacts
+
     - task: S3Upload@1
       displayName: 'Deploy to S3'
       inputs:
