@@ -7,18 +7,18 @@ pool:
 
 stages:
 - stage: BuildStage
-  displayName: Build
+  displayName: Build Stage
   jobs:
   - job: BuildJob
-    displayName: Build
+    displayName: Build Job
     steps:
     - powershell: 'Copy-Item "version.txt" -Destination "app-version.txt"'
 
 - stage: DeployStage
-  displayName: Deploy
+  displayName: Deploy Stage
   jobs:
   - job: DeployJob
-    displayName: Deploy
+    displayName: Deploy Job
     steps:
     - task: S3Upload@1
       displayName: 'Deploy to S3'
