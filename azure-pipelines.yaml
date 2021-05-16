@@ -23,10 +23,10 @@ stages:
         artifact: project-binaries
 
 - stage: DeployToTest
-  displayName: Deploy To Test Environment
+  displayName: Deploy to Test
   jobs:
   - deployment: DeployJob
-    displayName: Deploy Job
+    displayName: Deploy to Test
     environment: test
     strategy:
       runOnce:
@@ -55,10 +55,10 @@ stages:
 
 # TODO: Avoid duplication with DeployToTest
 - stage: DeployToProd
-  displayName: Deploy To Prod Environment
+  displayName: Deploy to Prod
   jobs:
   - deployment: DeployJob
-    displayName: Deploy Job
+    displayName: Deploy to Prod
     environment: prod
     strategy:
       runOnce:
