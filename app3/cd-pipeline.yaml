@@ -1,10 +1,4 @@
-trigger:
-  branches:
-    include:
-      - master
-  paths:
-    include:
-      - app3/*
+trigger: none
 
 pool:
   name: Azure Pipelines
