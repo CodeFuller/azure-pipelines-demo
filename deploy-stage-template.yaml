@@ -9,6 +9,8 @@ stages:
     strategy:
       runOnce:
         deploy:
+          variables: 
+            ImportedTestVariable2: $[ stageDependencies.BuildStage.BuildJob.outputs['SetOutputVariables.TestVariable2'] ]
           steps:
             # There is no download artifacts task here because it is auto injected in the deploy hook - https://docs.microsoft.com/en-us/azure/devops/pipelines/process/deployment-jobs?view=azure-devops#descriptions-of-lifecycle-hooks
             # Just in case we check for artifacts existence.
@@ -20,6 +22,11 @@ stages:
                    exit 1
                }
               displayName: Check Deploy Artifacts
+
+            - script: |
+               # This is a sample usage of output variable from another stage / job.
+               echo "ImportedTestVariable2 = '$(ImportedTestVariable2)'"
+              displayName: 'Print Variables'
 
             - task: S3Upload@1
               displayName: Deploy to S3

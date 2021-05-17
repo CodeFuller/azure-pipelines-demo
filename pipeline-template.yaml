@@ -19,6 +19,22 @@ stages:
         targetPath: '${{ parameters.appId }}-version.txt'
         artifact: project-binaries
 
+    - script: |
+       # This variable is available within current job, but could not be accessed by other jobs or stages.
+       echo "##vso[task.setvariable variable=TestVariable1;isOutput=false]Test Value 1"
+       # This variable is not available within current job, but could be accessed by other jobs or stages.
+       echo "##vso[task.setvariable variable=TestVariable2;isOutput=true]Test Value 2"
+      name: SetOutputVariables
+      displayName: Set Variables
+
+    - script: |
+       # This script will echo:
+       # TestVariable1 = 'Test Value 1'
+       # TestVariable2 = ''
+       echo "TestVariable1 = '$(TestVariable1)'"
+       echo "TestVariable2 = '$(TestVariable2)'"
+      displayName: Print Variables
+
 - template: deploy-stage-template.yaml
   parameters:
     appId: ${{ parameters.appId }}
