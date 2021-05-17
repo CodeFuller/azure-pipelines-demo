@@ -10,6 +10,6 @@ variables:
 stages:
 - template: deploy-stage-template.yaml
   parameters:
-    envName: test
-    envDisplayName: Test
+    envName: prod
+    envDisplayName: Prod
     isCDPipeline: true
