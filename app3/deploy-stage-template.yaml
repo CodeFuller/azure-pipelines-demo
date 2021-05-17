@@ -1,8 +1,10 @@
 parameters:
 - name: envName
   type: string
+
 - name: envDisplayName
   type: string
+
 - name: isCDPipeline
   type: boolean
   default: false

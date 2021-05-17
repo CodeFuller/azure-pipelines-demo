@@ -1,3 +1,13 @@
+parameters:
+- name: envName
+  type: string
+
+- name: envDisplayName
+  type: string
+
+- name: appId
+  type: string
+
 stages:
 - stage: DeployTo${{ parameters.envDisplayName }}
   displayName: Deploy to ${{ parameters.envDisplayName }}
@@ -26,7 +36,7 @@ stages:
             - script: |
                # This is a sample usage of output variable from another stage / job.
                echo "ImportedTestVariable2 = '$(ImportedTestVariable2)'"
-              displayName: 'Print Variables'
+              displayName: Print Variables
 
             - task: S3Upload@1
               displayName: Deploy to S3
