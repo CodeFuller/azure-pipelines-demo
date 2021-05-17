@@ -20,7 +20,7 @@ stages:
         deploy:
           steps:
             - task: DownloadPipelineArtifact@2
-              displayName: Download Pipeline Artifact
+              displayName: Download Pipeline Artifacts
               inputs:
                 # For CD pipeline, we use artifacts from last successful CI build.
                 ${{ if parameters.isCDPipeline }}:
