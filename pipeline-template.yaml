@@ -6,8 +6,12 @@ stages:
     displayName: Build Job
     steps:
       # We emulate project build with file copying.
-    - powershell: 'Copy-Item "${{ parameters.appId }}/version.txt" -Destination "${{ parameters.appId }}-version.txt"'
-      displayName: 'Build Project'
+    - task: PowerShell@2
+      displayName: Build Project
+      inputs:
+        targetType: filePath
+        filePath: copy-file.ps1
+        arguments: '"${{ parameters.appId }}/version.txt" "${{ parameters.appId }}-version.txt"'
 
     - task: PublishPipelineArtifact@1
       displayName: Publish Pipeline Artifact
