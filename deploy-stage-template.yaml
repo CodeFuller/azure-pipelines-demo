@@ -4,13 +4,13 @@ stages:
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   jobs:
   - deployment: DeployJob
+    variables:
+      ImportedTestVariable2: $[ stageDependencies.BuildStage.BuildJob.outputs['SetOutputVariables.TestVariable2'] ]
     displayName: Deploy to ${{ parameters.envDisplayName }}
     environment: ${{ parameters.envName }}
     strategy:
       runOnce:
         deploy:
-          variables: 
-            ImportedTestVariable2: $[ stageDependencies.BuildStage.BuildJob.outputs['SetOutputVariables.TestVariable2'] ]
           steps:
             # There is no download artifacts task here because it is auto injected in the deploy hook - https://docs.microsoft.com/en-us/azure/devops/pipelines/process/deployment-jobs?view=azure-devops#descriptions-of-lifecycle-hooks
             # Just in case we check for artifacts existence.
