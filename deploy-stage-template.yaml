@@ -27,5 +27,5 @@ stages:
                 bucketName: '$(TargetBucketName)'
                 sourceFolder: $(Pipeline.Workspace)/project-binaries
                 targetFolder: ${{ parameters.envName }}
-                globExpressions: {{ parameters.appId }}-version.txt
+                globExpressions: ${{ parameters.appId }}-version.txt
                 filesAcl: public-read
