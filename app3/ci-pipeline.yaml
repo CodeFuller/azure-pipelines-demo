@@ -1,0 +1,41 @@
+trigger:
+  branches:
+    include:
+      - master
+  paths:
+    include:
+      - app3/*
+
+pool:
+  name: Azure Pipelines
+  vmImage: ubuntu-latest
+
+variables:
+  aws.region: us-east-1
+
+stages:
+- stage: BuildStage
+  displayName: Build
+  jobs:
+  - job: BuildJob
+    displayName: Build
+    steps:
+      # We emulate project build with file copying.
+    - task: PowerShell@2
+      displayName: Build Project
+      inputs:
+        targetType: filePath
+        filePath: copy-file.ps1
+        arguments: '"app3/version.txt" "app3-version.txt"'
+
+    - task: PublishPipelineArtifact@1
+      displayName: Publish Pipeline Artifact
+      inputs:
+        targetPath: 'app3-version.txt'
+        artifact: project-binaries
+
+- template: ../deploy-stage-template.yaml
+  parameters:
+    appId: app3
+    envName: test
+    envDisplayName: Test
