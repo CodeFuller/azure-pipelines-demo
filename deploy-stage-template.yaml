@@ -13,7 +13,7 @@ stages:
             # Just in case we check for artifacts existence.
             # S3 Upload task will not produce error in case of missing source files.
             - powershell: |
-               $FilePath = "$(Pipeline.Workspace)/project-binaries/app-version.txt"
+               $FilePath = "$(Pipeline.Workspace)/project-binaries/{{ parameters.appId }}-version.txt"
                if (-not (Test-Path $FilePath -PathType Leaf)) {
                    Write-Error "File $FilePath does not exist"
                    exit 1
@@ -27,5 +27,5 @@ stages:
                 bucketName: '$(TargetBucketName)'
                 sourceFolder: $(Pipeline.Workspace)/project-binaries
                 targetFolder: ${{ parameters.envName }}
-                globExpressions: app-version.txt
+                globExpressions: {{ parameters.appId }}-version.txt
                 filesAcl: public-read

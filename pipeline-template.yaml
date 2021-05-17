@@ -1,13 +1,3 @@
-trigger:
-  - main
-
-pool:
-  name: Azure Pipelines
-  vmImage: ubuntu-latest
-
-variables:
-  aws.region: us-east-1
-
 stages:
 - stage: BuildStage
   displayName: Build Stage
@@ -16,21 +6,23 @@ stages:
     displayName: Build Job
     steps:
       # We emulate project build with file copying.
-    - powershell: 'Copy-Item "version.txt" -Destination "app-version.txt"'
+    - powershell: 'Copy-Item "{{ parameters.appId }}/version.txt" -Destination "{{ parameters.appId }}-version.txt"'
       displayName: 'Build Project'
 
     - task: PublishPipelineArtifact@1
       displayName: Publish Pipeline Artifact
       inputs:
-        targetPath: app-version.txt
+        targetPath: {{ parameters.appId }}-version.txt
         artifact: project-binaries
 
 - template: deploy-stage-template.yaml
   parameters:
+    appId: {{ parameters.appId }}
     envName: test
     envDisplayName: Test
 
 - template: deploy-stage-template.yaml
   parameters:
+    appId: {{ parameters.appId }}
     envName: prod
     envDisplayName: Production

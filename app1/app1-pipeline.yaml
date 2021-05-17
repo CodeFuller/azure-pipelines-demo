@@ -1,0 +1,13 @@
+trigger:
+  - main
+
+pool:
+  name: Azure Pipelines
+  vmImage: ubuntu-latest
+
+variables:
+  aws.region: us-east-1
+
+- template: ../pipeline-template.yaml
+  parameters:
+    appId: app1
