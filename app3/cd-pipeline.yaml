@@ -8,43 +8,8 @@ variables:
   aws.region: us-east-1
 
 stages:
-- stage: DeployToProd
-  displayName: Deploy to Prod
-  jobs:
-  - deployment: DeployJob
-    displayName: Deploy to Prod
-    environment: prod
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: DownloadPipelineArtifact@2
-            displayName: 'Download Pipeline Artifact'
-            inputs:
-              buildType: specific
-              project: $(System.TeamProjectId)
-              # Id of "App3 CI" pipeline. To avoid hardcoded id value we can search for pipeline via Azure DevOps API.
-              definition: 16
-              buildVersionToDownload: specific
-              pipelineId: $(DeployedBuildId)
-
-          # There is no download artifacts task here because it is auto injected in the deploy hook - https://docs.microsoft.com/en-us/azure/devops/pipelines/process/deployment-jobs?view=azure-devops#descriptions-of-lifecycle-hooks
-          # Just in case we check for artifacts existence.
-          # S3 Upload task will not produce error in case of missing source files.
-          - powershell: |
-              $FilePath = "$(Pipeline.Workspace)/project-binaries/app3-version.txt"
-              if (-not (Test-Path $FilePath -PathType Leaf)) {
-                  Write-Error "File $FilePath does not exist"
-                  exit 1
-              }
-            displayName: Check Deploy Artifacts
-
-          - task: S3Upload@1
-            displayName: Deploy to S3
-            inputs:
-              awsCredentials: '$(AwsCredentials)'
-              bucketName: '$(TargetBucketName)'
-              sourceFolder: $(Pipeline.Workspace)/project-binaries
-              targetFolder: prod
-              globExpressions: app3-version.txt
-              filesAcl: public-read
+- template: deploy-stage-template.yaml
+  parameters:
+    envName: test
+    envDisplayName: Test
+    useArtifactsFromAnotherPipeline: true

@@ -34,8 +34,8 @@ stages:
         targetPath: 'app3-version.txt'
         artifact: project-binaries
 
-- template: ../deploy-stage-template.yaml
+- template: deploy-stage-template.yaml
   parameters:
-    appId: app3
     envName: test
     envDisplayName: Test
+    useArtifactsFromSpecificBuild: false
