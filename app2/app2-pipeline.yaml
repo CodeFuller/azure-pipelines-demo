@@ -1,5 +1,9 @@
 trigger:
-  - master
+  branches:
+    - master
+  paths:
+    include:
+      - app2/*
 
 pool:
   name: Azure Pipelines
