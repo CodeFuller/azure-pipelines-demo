@@ -1,9 +1,9 @@
 stages:
 - stage: BuildStage
-  displayName: Build Stage
+  displayName: Build
   jobs:
   - job: BuildJob
-    displayName: Build Job
+    displayName: Build
     steps:
       # We emulate project build with file copying.
     - task: PowerShell@2
