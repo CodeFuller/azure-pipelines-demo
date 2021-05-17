@@ -38,4 +38,4 @@ stages:
   parameters:
     envName: test
     envDisplayName: Test
-    useArtifactsFromSpecificBuild: false
+    isCDPipeline: false

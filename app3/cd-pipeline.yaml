@@ -12,4 +12,4 @@ stages:
   parameters:
     envName: test
     envDisplayName: Test
-    useArtifactsFromAnotherPipeline: true
+    isCDPipeline: true

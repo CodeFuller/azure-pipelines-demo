@@ -3,7 +3,7 @@ parameters:
   type: string
 - name: envDisplayName
   type: string
-- name: useArtifactsFromSpecificBuild
+- name: isCDPipeline
   type: boolean
   default: false
 
@@ -23,7 +23,8 @@ stages:
               displayName: Download Pipeline Artifact
               inputs:
                 artifactName: project-binaries
-                ${{ if parameters.useArtifactsFromSpecificBuild }}:
+                # For CD pipeline, we use artifacts from last successful CI build.
+                ${{ if parameters.isCDPipeline }}:
                   buildType: specific
                   project: $(System.TeamProjectId)
                   # Id of "App3 CI" pipeline. To avoid hardcoded id value we can search for pipeline via Azure DevOps API.
