@@ -31,7 +31,7 @@ app3 demonstrates separate CI and CD pipelines.
 
 [CD pipeline](app3/cd-pipeline.yaml) is triggered manually. It deploys the latest successful build from CI pipeline to prod environment.
 
-[Template](app3/deploy-stage-template.yaml) for deployment stage is used to reuse deploy logic stage between CI and CD pipelines.
+[Template](app3/deploy-stage-template.yaml) for deployment stage is used to reuse deploy logic between CI and CD pipelines.
 
 ## Documentation
 
