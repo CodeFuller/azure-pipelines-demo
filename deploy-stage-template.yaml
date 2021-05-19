@@ -13,8 +13,11 @@ stages:
   displayName: Deploy to ${{ parameters.envDisplayName }}
   # Stage dependency must exist for correct reference of variables from other stage (see reference to stageDependencies.BuildStage below).
   # It can be omitted for neighbor stages (like in our case), because implicit dependency between stages exist.
-  # However it will break if some intermediate stage is added. That is why we specify dependency explicitly.
-  dependsOn: BuildStage
+  # However it will break if some intermediate stage is added.
+  # That is why it is better to specify dependency explicitly.
+  # We do not specify dependency here, because DeployToTest stage will depend only BuildStage and will not depend on DeployToProd stage anymore.
+  # This could be fixed by adding DeployToProd to explicit dependencies of DeployToTest, however it become cumbersome since same template is used for both stages.
+  # dependsOn: BuildStage
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   jobs:
   - deployment: DeployJob
