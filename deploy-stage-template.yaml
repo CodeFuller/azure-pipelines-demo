@@ -11,6 +11,10 @@ parameters:
 stages:
 - stage: DeployTo${{ parameters.envDisplayName }}
   displayName: Deploy to ${{ parameters.envDisplayName }}
+  # Stage dependency must exist for correct reference of variables from other stage (see reference to stageDependencies.BuildStage below).
+  # It can be omitted for neighbor stages (like in our case), because implicit dependency between stages exist.
+  # However it will break if some intermediate stage is added. That is why we specify dependency explicitly.
+  dependsOn: BuildStage
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   jobs:
   - deployment: DeployJob
@@ -22,6 +26,11 @@ stages:
       runOnce:
         deploy:
           steps:
+            - script: |
+               # This is a sample usage of output variable from another stage / job.
+               echo "ImportedTestVariable2 = '$(ImportedTestVariable2)'"
+              displayName: Print Variables
+
             # There is no download artifacts task here because it is auto injected in the deploy hook - https://docs.microsoft.com/en-us/azure/devops/pipelines/process/deployment-jobs?view=azure-devops#descriptions-of-lifecycle-hooks
             # Just in case we check for artifacts existence.
             # S3 Upload task will not produce error in case of missing source files.
@@ -32,11 +41,6 @@ stages:
                    exit 1
                }
               displayName: Check Deploy Artifacts
-
-            - script: |
-               # This is a sample usage of output variable from another stage / job.
-               echo "ImportedTestVariable2 = '$(ImportedTestVariable2)'"
-              displayName: Print Variables
 
             - task: S3Upload@1
               displayName: Deploy to S3
