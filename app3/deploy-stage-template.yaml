@@ -12,7 +12,6 @@ parameters:
 stages:
 - stage: DeployTo${{ parameters.envDisplayName }}
   displayName: Deploy to ${{ parameters.envDisplayName }}
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   jobs:
   - deployment: DeployJob
     displayName: Deploy to ${{ parameters.envDisplayName }}
