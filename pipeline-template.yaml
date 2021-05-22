@@ -1,6 +1,8 @@
 stages:
 - stage: BuildStage
   displayName: Build
+  variables:
+  - group: MyTestVariableGroup
   jobs:
   - job: BuildJob
     displayName: Build
@@ -33,6 +35,7 @@ stages:
        # TestVariable2 = ''
        echo "TestVariable1 = '$(TestVariable1)'"
        echo "TestVariable2 = '$(TestVariable2)'"
+       echo "MyTestVariable = '$(MyTestVariable)'"
       displayName: Print Variables
 
 - template: deploy-stage-template.yaml
