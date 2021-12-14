@@ -10,7 +10,7 @@ parameters:
 
 variables:
   - group: DemoVariableGroup
-  - group: DemoVariableGroup.$(TargetEnvironment)
+  - group: DemoVariableGroup.${{ parameters.TargetEnvironment }}
 
 stages:
 - stage: Build
