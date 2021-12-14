@@ -1,0 +1,25 @@
+pool:
+  name: Azure Pipelines
+  vmImage: ubuntu-latest
+
+parameters:
+  - name: TargetEnvironment
+    displayName: Target Environment
+    type: string
+    values: [ dev, qa ]
+
+variables:
+  - group: CoreVariableGroup
+  - group: CoreVariableGroup.$(TargetEnvironment)
+
+stages:
+- stage: Build
+  displayName: Build
+  jobs:
+  - job: Build
+    displayName: Build
+    steps:
+    - script: |
+        echo 'CommonVariable = "$(Config.CommonVariable)"'
+        echo 'SpecificVariable = "$(Config.SpecificVariable)"'
+      displayName: Dump Variables
