@@ -9,8 +9,8 @@ parameters:
     values: [ dev, qa ]
 
 variables:
-  - group: CoreVariableGroup
-  - group: CoreVariableGroup.$(TargetEnvironment)
+  - group: DemoVariableGroup
+  - group: DemoVariableGroup.$(TargetEnvironment)
 
 stages:
 - stage: Build
