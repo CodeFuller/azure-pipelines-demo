@@ -1,0 +1,7 @@
+pool:
+  name: Self-hosted Agent Pool
+
+steps:
+- powershell: |
+    'Hello from Azure Pipelines :)' | Out-File "c:\temp\azure-pipelines.txt"
+  displayName: Test Step
